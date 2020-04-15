@@ -3,7 +3,14 @@
 var hasElementType = typeof Element !== 'undefined';
 var hasMap = typeof Map === 'function';
 var hasSet = typeof Set === 'function';
-var hasArrayBuffer = typeof ArrayBuffer === 'function';
+
+// Support for ArrayBuffer.isView landed later than ArrayBuffer itself
+var isArrayBufferView =
+  typeof ArrayBuffer === 'function' && typeof ArrayBuffer.isView === 'function'
+    ? ArrayBuffer.isView
+    : function () {
+      return false;
+    };
 
 // Note: We **don't** need `envHasBigInt64Array` in fde es6/index.js
 
@@ -64,7 +71,7 @@ function equal(a, b) {
     }
     // END: Modifications
 
-    if (hasArrayBuffer && ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+    if (isArrayBufferView(a) && isArrayBufferView(b)) {
       length = a.length;
       if (length != b.length) return false;
       for (i = length; i-- !== 0;)
