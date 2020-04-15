@@ -12,6 +12,9 @@ var isArrayBufferView =
       return false;
     };
 
+var ObjectPrototype = Object.prototype;
+var hasOwnProperty = ObjectPrototype.hasOwnProperty;
+
 // Note: We **don't** need `envHasBigInt64Array` in fde es6/index.js
 
 function equal(a, b) {
@@ -80,10 +83,6 @@ function equal(a, b) {
     }
 
     if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
-
-    var ObjectPrototype = Object.prototype;
-    var hasOwnProperty = ObjectPrototype.hasOwnProperty;
-
     if (a.valueOf !== ObjectPrototype.valueOf) return a.valueOf() === b.valueOf();
     if (a.toString !== ObjectPrototype.toString) return a.toString() === b.toString();
 
