@@ -18,7 +18,7 @@ function equal(a, b) {
   // START: fast-deep-equal es6/index.js 3.1.1
   if (a === b) return true;
 
-  if (a && b && typeof a == 'object' && typeof b == 'object') {
+  if (a !== null && b !== null && typeof a == 'object' && typeof b == 'object') {
     if (a.constructor !== b.constructor) return false;
 
     var length, i, keys;
