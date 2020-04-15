@@ -80,15 +80,19 @@ function equal(a, b) {
     }
 
     if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
-    if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
-    if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
+
+    var ObjectPrototype = Object.prototype;
+    var hasOwnProperty = ObjectPrototype.hasOwnProperty;
+
+    if (a.valueOf !== ObjectPrototype.valueOf) return a.valueOf() === b.valueOf();
+    if (a.toString !== ObjectPrototype.toString) return a.toString() === b.toString();
 
     keys = Object.keys(a);
     length = keys.length;
     if (length !== Object.keys(b).length) return false;
 
     for (i = length; i-- !== 0;)
-      if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
+      if (!hasOwnProperty.call(b, keys[i])) return false;
     // END: fast-deep-equal
 
     // START: react-fast-compare
