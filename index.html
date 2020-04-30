@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <script src="react-fast-compare-3.0.1.js"></script>
+  </head>
+  <body>
+    <h1>Open developer console</h1>
+    <p>The following Script is running on this page</p>
+    <script
+      style="display: block; font-family: monospace; white-space: pre;"
+    >
+      const typedArray1 = new Int8Array([1, 5]);
+      const typedArray2 = new Int8Array([2, 3]);
+      console.log(reactFastCompare(typedArray1, typedArray2));
+    </script>
+    <p>
+      Browse to this HTML file in a host environment where ArrayBuffer is
+      present but ArrayBuffer.isView is not and this script should throw.
+    </p>
+  </body>
+</html>

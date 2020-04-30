@@ -3,17 +3,7 @@
 var hasElementType = typeof Element !== 'undefined';
 var hasMap = typeof Map === 'function';
 var hasSet = typeof Set === 'function';
-
-// Support for ArrayBuffer.isView landed later than ArrayBuffer itself
-var isArrayBufferView =
-  typeof ArrayBuffer === 'function' && typeof ArrayBuffer.isView === 'function'
-    ? ArrayBuffer.isView
-    : function () {
-      return false;
-    };
-
-var ObjectPrototype = Object.prototype;
-var hasOwnProperty = ObjectPrototype.hasOwnProperty;
+var hasArrayBuffer = typeof ArrayBuffer === 'function';
 
 // Note: We **don't** need `envHasBigInt64Array` in fde es6/index.js
 
@@ -21,7 +11,7 @@ function equal(a, b) {
   // START: fast-deep-equal es6/index.js 3.1.1
   if (a === b) return true;
 
-  if (a !== null && b !== null && typeof a == 'object' && typeof b == 'object') {
+  if (a && b && typeof a == 'object' && typeof b == 'object') {
     if (a.constructor !== b.constructor) return false;
 
     var length, i, keys;
@@ -74,7 +64,7 @@ function equal(a, b) {
     }
     // END: Modifications
 
-    if (isArrayBufferView(a) && isArrayBufferView(b)) {
+    if (hasArrayBuffer && ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
       length = a.length;
       if (length != b.length) return false;
       for (i = length; i-- !== 0;)
@@ -83,15 +73,15 @@ function equal(a, b) {
     }
 
     if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
-    if (a.valueOf !== ObjectPrototype.valueOf) return a.valueOf() === b.valueOf();
-    if (a.toString !== ObjectPrototype.toString) return a.toString() === b.toString();
+    if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
+    if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
 
     keys = Object.keys(a);
     length = keys.length;
     if (length !== Object.keys(b).length) return false;
 
     for (i = length; i-- !== 0;)
-      if (!hasOwnProperty.call(b, keys[i])) return false;
+      if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
     // END: fast-deep-equal
 
     // START: react-fast-compare
@@ -121,7 +111,7 @@ function equal(a, b) {
 }
 // end fast-deep-equal
 
-module.exports = function isEqual(a, b) {
+window.reactFastCompare = function isEqual(a, b) {
   try {
     return equal(a, b);
   } catch (error) {
